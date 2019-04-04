@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Dsample
@@ -161,9 +162,22 @@ class Dsample
      * @ORM\Column(name="varioussampleinfo", type="string", nullable=true)
      */
     private $varioussampleinfo;
+	
+	
+	/** 
+   * @ORM\OneToMany(targetEntity="Dsamminerals", mappedBy="idsample") 
+   */ 
+    private $dsamminerals; 
 
+	/*public function __construct() 
+     { 
+         $this->dsamminerals = new ArrayCollection(); 
+     } 
 
-
+	public function getDsamminerals()
+     { 
+         return $this->dsamminerals; 
+     } */
 
 
     /**

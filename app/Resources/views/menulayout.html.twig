@@ -21,7 +21,7 @@
 				</td>
 				<td>
 					<header>
-						<nav id='cssmenu'>
+						<nav id='cssmenu' class="above">
 							
 							<div id="head-mobile"></div>
 							<div class="button"></div>
@@ -33,6 +33,7 @@
 								</li>
 								<li><a href="">Add</a>
 									<ul>
+										<li><a href="{{ path('app_add_contribution') }}">Contribution</a></li>
 										<li><a href="{{ path('app_add_document') }}">Document/Image</a></li>
 										<li><a href="{{ path('app_add_drilling') }}">Drilling</a></li>
 										<li><a href="{{ path('app_add_points') }}">Observation points</a></li>
@@ -42,6 +43,7 @@
 								</li>
 								<li><a href="">Search</a>
 									<ul>
+										<li><a href="{{ path('app_search_contribution') }}">Contribution</a></li>
 										<li><a href="{{ path('app_search_document') }}">Document/Image</a></li>
 										<li><a href="{{ path('app_search_drilling') }}">Drilling</a></li>
 										<li><a href="{{ path('app_search_points') }}">Observation points</a></li>
@@ -49,7 +51,14 @@
 										<li><a href="{{ path('app_search_sample') }}">Sample</a></li>
 									</ul>
 								</li>
-								<li><a href="">Admin</a></li>
+								<li><a href="">Admin</a>
+									<ul>
+										<li><a href="{{ path('app_add_user') }}">Add user</a></li>	
+										<li><a href="{{ path('app_search_user') }}">Search user</a></li>	
+										<li><a href="{{ path('app_add_mineral') }}">Add mineral</a></li>
+										<li><a href="{{ path('app_search_mineral') }}">Search mineral</a></li>										
+									</ul>
+								</li>
 								<li><a href="{{ path('app_home') }}login">Login</a></li>
 							</ul>
 						</nav>

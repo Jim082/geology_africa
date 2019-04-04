@@ -151,14 +151,22 @@ class Dsamgranulo
     /**
      * @var \AppBundle\Entity\Dsample
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample",  fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idcollection", referencedColumnName="idcollection"),
-     *   @ORM\JoinColumn(name="idsample", referencedColumnName="idsample")
      * })
      */
     private $idcollection;
 
+	/**
+     * @var \AppBundle\Entity\Dsample
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample",  fetch="EAGER")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsample", referencedColumnName="idsample")
+     * })
+     */
+    private $idsample;
 
 
     /**

@@ -42,11 +42,11 @@
 			$(".inp_searchsecuritylevel").val("{{elem['securitylevel']}}")
 			$(".inp_searchvariousinfo").val("{{elem['variousinfo']}}");
 			
-			if ({{elem['radioactivity']}} == 1){
+			/*if ({{elem['radioactivity']}} == 1){
 				$( ".inp_searchradioact").attr('checked',true);
 			}else{
 				$( ".inp_searchradioact").attr('checked',false);
-			}
+			}*/
 			if ({{elem['slimplate']}} == 1){
 				$( ".inp_searchslimplate").attr('checked',true);
 			}else{
@@ -216,28 +216,28 @@
 				<TH width="1%">
 				</TH>
 			</TR>
+			{% set i=0 %}
 			{% for item in results %}
-				<TR>
-					<TD>
+				<TR> 
+					<TD class="but_showsample_{{item.pk}}" onclick="viewsample({{item.pk}})" alt="home" height="11" width="13" onmouseover="" style="cursor: pointer;">
 						{{item.idcollection}}
 					</TD>
-					<TD>
+					<TD class="but_showsample_{{item.pk}}" onclick="viewsample({{item.pk}})" alt="home" height="11" width="13" onmouseover="" style="cursor: pointer;">
 						{{item.idsample}}
 					</TD>
-					<TD>
+					<TD class="but_showsample_{{item.pk}}" onclick="viewsample({{item.pk}})" alt="home" height="11" width="13" onmouseover="" style="cursor: pointer;">
 						{{item.fieldnum}}
 					</TD>
-
-					{#{% if item.idcollection == 'M' %}#}
 					<TD>
-						{{item.mineral|lower}}
+						{{item.mname|lower}}
+						{% if (item.fmname|length > 0) and (item.fmname|lower != item.mname|lower) %} - {{ item.fmname|lower}}(Fl.) {% endif %}
 					</TD>
-					{#{% endif %}#}
 					<TD>
 						{{item.mineral2|lower}}
 					</TD>
 					<TD>
-						{{item.mformula}}
+						<label class="input_formula{{i}}" >	</label>
+						<!--{ {item.mformula}}-->
 					</TD>
 					<TD>
 						{{item.sampledescription}}
@@ -265,9 +265,10 @@
 						{{item.loaninformation}}
 					</TD>
 					<TD>
-						<img src="{{ asset('pics/edit.png') }}" alt="home" height="11" width="13">
+						<img src="{{ asset('pics/edit.png') }}" class="but_editsample_{{item.pk}}" onclick="editsample({{item.pk}})" alt="home" height="11" width="13" onmouseover="" style="cursor: pointer;"> 
 					</TD>
 				</TR>
+				{% set i=i+1%}
 			{% endfor %}
 		</TABLE>
 		<div class="navigation text-center">
@@ -276,6 +277,37 @@
 		
 		<script type="text/javascript">
 		
+			{% set i=0%}
+			var formulas_array = [];
+			{% for item in results %}
+				formulas_array[{{i}}]=displayFormula("{{item.mformula}}");
+				$(".input_formula{{i}}").html(formulas_array[{{i}}]);
+				{% set i=i+1%}
+			{% endfor %}	
+			
+			function displayFormula(formula){	
+				var newformula = "";		
+				if(formula.indexOf("&lt;") != -1){
+					formula = formula.replace(/&gt;/g,">").replace(/&lt;/g,"<");		
+				}
+				newformula = formula.replace(/>/g,"§");
+				newformula = newformula.replace(/</g,"<sub>");
+				newformula = newformula.replace(/§/g,"</sub>");
+				newformulaarray = newformula.split("&#039;");
+				
+				if (newformulaarray.length >1){
+					newformula = "";
+					for (i=0;i<newformulaarray.length; i++){
+						if (i%2 == 0){
+							newformula = newformula + newformulaarray[i];
+						}else{
+							newformula = newformula + "<sup>" + newformulaarray[i] + "</sup>";
+						}
+					}
+				}
+				return newformula;
+			}
+			
 			function sortTable(n,dir) {
 				if (dir==1){
 					sortDirection = n+" "+"ASC";
@@ -285,6 +317,19 @@
 				}
 				searchclic();
 			}
+			
+			function editsample(pk) {
+				var url = '{{ path("app_edit_sample", {'pk': 'article_id'}) }}'; 
+				url = url.replace("article_id", pk);
+				window.location = url;
+			}
+			
+			function viewsample(pk) {
+				var url = '{{ path("app_view_sample", {'pk': 'article_id'}) }}'; 
+				url = url.replace("article_id", pk);
+				window.location = url;
+			}
+			
 			$(document).ready(function() {
 				$(".lab_number_results").html("{{elem['nbrres']}} records");
 				$(".inp_searchNbrResByPage").val("{{elem['NbrResByPage']}}");
@@ -293,6 +338,7 @@
 					nbrval = $('.inp_searchNbrResByPage option:selected').val();
 					searchclic();
 				});
+				
 			});
 		</script>
 	{% endblock %}

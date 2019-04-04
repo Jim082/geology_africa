@@ -27,7 +27,7 @@ class Dcontributor
      *
      * @ORM\Column(name="idcontributor", type="integer", nullable=false)
      */
-    private $idcontributor = '0';
+    private $idcontributor;
 
     /**
      * @var string

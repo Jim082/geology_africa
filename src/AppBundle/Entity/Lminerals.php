@@ -82,6 +82,20 @@ class Lminerals
     {
         return $this->pk;
     }
+	
+	/**
+     * Set pk
+     *
+     * @param integer $pk
+     *
+     * @return Lminerals
+     */
+    public function setPk($pk)
+    {
+        $this->pk = $pk;
+
+        return $this;
+    }
 
     /**
      * Set idmineral
@@ -250,4 +264,10 @@ class Lminerals
     {
         return $this->mparent;
     }
+	
+
+	 /*public function __toString()
+	{
+		return "test";
+	}*/
 }

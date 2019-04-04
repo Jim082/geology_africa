@@ -72,7 +72,16 @@
 							Radioactivity:
 						</th>
 						<td width = "30%">
-							<input type="checkbox" name="inp_searchradioact" class="inp_searchradioact" value="1" data-toggle="tooltip" data-placement="top" title="Check to see records with values in radioactivity">
+							<!--<input type="checkbox" name="inp_searchradioact" class="inp_searchradioact" value="1" data-toggle="tooltip" data-placement="top" title="Check to see records with values in radioactivity">-->
+							<select id="inp_searchradioact" class="inp_searchradioact" data-toggle="tooltip" data-placement="top" title="Enter a radioactivity level">
+								<option value="all">All</option>
+								<option value=0>0</option>
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+								<option value=4>4</option>
+								<option value=5>5</option>
+							</select>
 						</td>
 						<th  width = "20%">
 							Holotype:
@@ -372,16 +381,13 @@
 		var lithomineralSelect = $(".inp_searchLithomineral");
 		var coderesults = [];
 		var sortDirection = "";
-		var tips_array = [
-		  [1, 2],
-		  [4, 5],
-		  [7, 8]
-		];
 		
 		//ajax to fill the comboboxes------
 		//collections
+		path = "{{ path('app_collection_list', {'querygroup': 'sample%' })  }}";
+
 		$.ajax({
-			url: "{{ path('app_collection_list', {'querygroup': 'sample%' })  }}",
+			url: path,
 			type: "GET",
 			dataType: "JSON",
 			success: function (collections) {
@@ -396,16 +402,76 @@
 			}
 		});
 		
+		function naturalCompare(a, b) {
+			var ax = [], bx = [];
+
+			a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+			b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+			
+			while(ax.length && bx.length) {
+				var an = ax.shift();
+				var bn = bx.shift();
+				var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+				if(nn) return nn;
+			}
+
+			return ax.length - bx.length;
+		}
+
 		//combo of minerals
 		function fill_combos(path,combofield){
+			var namesarray = [];
+			var fnamesarray = [];
+			var uniqueArray = [];
 			$.ajax({
 				url: path,
 				type: "GET",
 				dataType: "JSON",
 				success: function (data) {
+					var i = 0;
+					var l = 0;
+					namesarray = [];
+					fnamesarray = [];
 					$.each(data, function (key, data1) {
-						combofield.append('<option value="' + data1.fmname + '">' + data1.fmname.toLowerCase() + '</option>');
+						if ((data1.mname != null) & (data1.mname != "" )){
+							namesarray[i] = data1.mname;
+							i++;
+						}
+						if ((data1.fmname != null)  & (data1.fmname != "")){
+							fnamesarray[l] = data1.fmname;
+							l++;
+						}
 					});
+					
+					if(combofield == mineralSelect){
+						var newArray = namesarray;
+						var found=false;
+						var newindex = i;
+						for(var m =0;m<l;m++){
+							found=false;
+							for(var n =0;n<i;n++){
+								if (newArray[n].toLowerCase() == fnamesarray[m].toLowerCase()){
+									found=true;
+								}
+							}
+							if (found==false){
+								newindex++;
+								newArray[newindex] = fnamesarray[m];
+							}
+						}
+
+						newArray.sort(naturalCompare);
+
+						for (var j=0;j < newindex;j++){
+							if(newArray[j] != null){
+								combofield.append('<option value="' + newArray[j] + '">' + newArray[j].toLowerCase() + '</option>');
+							}
+						};
+					}else{
+						for (var k=0;k<fnamesarray.length;k++){
+							combofield.append('<option value="' + fnamesarray[k] + '">' + fnamesarray[k].toLowerCase() + '</option>');
+						};
+					}
 				},
 				error: function (err) {
 					alert("An error ocurred while loading data ...");
@@ -455,6 +521,7 @@
 					dataType: "JSON",
 					success: function (donnees) {
 						var i = 0;
+						coderesults = [];
 						$.each(donnees, function (key, donnee) {
 							coderesults[i] = donnee.fieldnum;
 							i++;
@@ -478,7 +545,8 @@
 			+",,size:"+$(".inp_searchsize").val()
 			+",,dimension:"+$(".inp_searchdimension").val()
 			+",,quality:"+$(".inp_searchquality").val()
-			+",,radioactivity:"+$("input[name='inp_searchradioact']:checked").val()
+			//+",,radioactivity:"+$("input[name='inp_searchradioact']:checked").val()
+			+",,radioactivity:"+$(".inp_searchradioact").val()
 			+",,slimplate:"+$("input[name='inp_searchslimplate']:checked").val()
 			+",,chemanalysis:"+$("input[name='inp_searchchemanalysis']:checked").val()
 			+",,holotype:"+$("input[name='inp_searchholotype']:checked").val()

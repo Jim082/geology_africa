@@ -19,6 +19,8 @@ nav{position:relative;width:980px;margin:0 auto;}
 	background-color:#a1a69a;
 	width: 100%
 }
+.above{position: relative;z-index: 12399995;}
+
 #cssmenu:after,#cssmenu > ul:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0}
 #cssmenu #head-mobile{display:none}
 #cssmenu{font-family:sans-serif;border-left:1px solid #e0e0e0;border-right:1px solid #e0e0e0;}

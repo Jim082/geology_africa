@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Dsamminerals
  *
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\DSammineralsRepository")
  * @ORM\Table(name="dsamminerals", uniqueConstraints={@ORM\UniqueConstraint(name="dsamminerals_unique", columns={"idcollection", "idsample", "idmineral"})}, indexes={@ORM\Index(name="IDX_1AC34B3131E4780895B6DB6F", columns={"idcollection", "idsample"}), @ORM\Index(name="IDX_1AC34B31C29FFB11", columns={"idmineral"})})
  * @ORM\Entity
  */
@@ -27,32 +28,48 @@ class Dsamminerals
      *
      * @ORM\Column(name="grade", type="smallint", nullable=true)
      */
-    private $grade = '0';
+    private $grade;
 
+	
     /**
      * @var \AppBundle\Entity\Dsample
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample",  fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idcollection", referencedColumnName="idcollection"),
-     *   @ORM\JoinColumn(name="idsample", referencedColumnName="idsample")
      * })
      */
     private $idcollection;
+	
+	/**
+     * @var \AppBundle\Entity\Dsample
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dsample",  fetch="EAGER")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsample", referencedColumnName="idsample")
+     * })
+     */
+    private $idsample;
 
     /**
      * @var \AppBundle\Entity\Lminerals
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lminerals")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lminerals",  fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idmineral", referencedColumnName="idmineral")
      * })
      */
     private $idmineral;
+	
+
+	 
+	
+	
 
 
 
-    /**
+
+	/**
      * Get pk
      *
      * @return integer
@@ -109,6 +126,31 @@ class Dsamminerals
     {
         return $this->idcollection;
     }
+	
+	/**
+     * Set idsample
+     *
+     * @param \AppBundle\Entity\Dsample $idsample
+     *
+     * @return Dsamminerals
+     */
+    public function setIdsample(\AppBundle\Entity\Dsample $idsample = null)
+    {
+        $this->idsample = $idsample;
+
+        return $this;
+    }
+
+    /**
+     * Get idsample
+     *
+     * @return \AppBundle\Entity\Dsample
+     */
+    public function getIdsample()
+    {
+        return $this->idsample;
+    }
+	
 
     /**
      * Set idmineral
